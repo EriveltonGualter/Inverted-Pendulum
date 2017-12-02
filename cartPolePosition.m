@@ -17,7 +17,8 @@ function pos = cartPolePosition(z,p)
 
 %%%% unpack the state
 x = z(1,:);   %Cart position (Not used in dynamics)
-q = z(2,:);   % pendulum (pole) angle, measure from gravity vector
+% q = z(2,:);   % pendulum (pole) angle, measure from gravity vector
+q = z(3,:); % temp
 
 %%%% Unpack the physical parameters
 l = p.l;  %Pendulum length
