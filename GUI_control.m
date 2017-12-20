@@ -22,7 +22,7 @@ function varargout = GUI_control(varargin)
 
 % Edit the above text to modify the response to help GUI_control
 
-% Last Modified by GUIDE v2.5 19-Nov-2017 21:22:10
+% Last Modified by GUIDE v2.5 20-Dec-2017 14:16:29
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -59,8 +59,9 @@ handles.m1 = 5.0;      % (kg) Cart mass
 handles.m2 = 5.0;      % (kg) pole mass
 handles.l = 5.0;        % (m) pendulum (pole) length
 handles.time = 10.0;    % (s) durantion time of simulation
-handles.angle = 180.5;     % (degree) initial angle
+handles.angle = 145;     % (degree) initial angle
 handles.d = 1;          % damping 
+handles.x = 12.5;
 
 set(handles.sld_time,'Value',handles.time);
 set(handles.sld_m1,'Value',handles.m1);
@@ -68,6 +69,7 @@ set(handles.sld_m2,'Value',handles.m2);
 set(handles.sld_l,'Value',handles.l);
 set(handles.sld_angle,'Value',handles.angle);
 set(handles.sld_d,'Value',handles.d);
+set(handles.sld_x,'Value',handles.x);
 
 set(handles.edit_time,'string',num2str(handles.time));
 set(handles.edit_m1,'string',num2str(handles.m1));
@@ -75,6 +77,9 @@ set(handles.edit_m2,'string',num2str(handles.m2));
 set(handles.edit_l,'string',num2str(handles.l));
 set(handles.edit_angle,'string',num2str(handles.angle));
 set(handles.edit_d,'string',num2str(handles.d));
+
+txtx = strcat('Desired Position: ',num2str(handles.x),' m');
+set(handles.txt_x,'string',txtx);
 
 clearvars -global -except hObject handles eventdata
 
@@ -114,10 +119,8 @@ contents = cellstr(get(handles.pop_control,'String'));
 switch contents{get(handles.pop_control,'Value')}
     case 'No control - passive system'
         control = 0;
-    case 'LQR'
+    case 'LQR Controller'
         control = 1;
-    case 'Pole Place'
-        control = 2;
 end
 
 simulation(control, hObject, handles); 
@@ -475,4 +478,34 @@ function edit_d_CreateFcn(hObject, eventdata, handles)
 %       See ISPC and COMPUTER.
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on slider movement.
+function sld_x_Callback(hObject, eventdata, handles)
+% hObject    handle to sld_x (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'Value') returns position of slider
+%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
+
+handles.x = get(hObject,'Value');
+
+txtx = strcat('Desired Position: ',num2str(handles.x),' m');
+set(handles.txt_x,'string',txtx);
+
+% Update handles structure
+guidata(hObject, handles); 
+
+
+% --- Executes during object creation, after setting all properties.
+function sld_x_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to sld_x (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: slider controls usually have a light gray background.
+if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor',[.9 .9 .9]);
 end

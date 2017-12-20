@@ -4,7 +4,7 @@ function simulation(id, hObject, handles)
 
     %%%% Initial State
     z0 = [
-        1.0;   %horizontal position -
+        10.0;   %horizontal position -
         0.0;   %horizontal velocity
         (pi/180)*handles.angle;  %pendulum angle (wrt gravity)
         0.0];  %pendulum angular rate
@@ -30,11 +30,14 @@ function simulation(id, hObject, handles)
 
     switch id
         case 0
+            z0(1) = handles.x;
             dynFun = @(t,z)( cartPoleDynamics(z, p, 0));
         case 1
-            K = lqr_control(m2,m1, l, -g, d)
-            
-            dynFun = @(t,z)( cartPoleDynamics(z, p, -K*(z-[0; 0; pi; 0])));
+            K = lqr_control(m2,m1,l,-g,d)
+            dynFun = @(t,z)( cartPoleDynamics(z, p, -K*(z-[handles.x; 0; pi; 0])));
+        case 2
+            K = poleplace_control(m2,m1,l,-g,d)
+            dynFun = @(t,z)( cartPoleDynamics(z, p, -K*(z-[handles.x; 0; pi; 0])));
         otherwise
     end
 
@@ -74,7 +77,8 @@ function simulation(id, hObject, handles)
     xUpp = max(max(x1 + 0.5*p.w,  x2 + p.r)) + padding;
     yLow = min(min(y1 - 0.5*p.h,  y2 - p.r)) - padding;
     yUpp = max(max(y1 + 0.5*p.w,  y2 + p.r)) + padding;
-    extents = [xLow,xUpp,yLow,yUpp];
+%     extents = [xLow,xUpp,yLow,yUpp];
+    extents = [0 25 -6 6];
 
     % Create and clear a figure:
     % figure(2); clf;
@@ -102,4 +106,11 @@ function simulation(id, hObject, handles)
         % Update handles structure
         guidata(hObject, handles);
     end 
+    
+    %% Plots
+    figure;
+    plot(t,z,'LineWidth',2);
+    legend('displacement','velocity','angle','angular velocity');
+    xlabel('time (s)','Fontsize',14,'interpreter','latex');
+    ylabel('States','Fontsize',14,'interpreter','latex');
 end

@@ -24,7 +24,7 @@ x2 = pos(3);
 y2 = pos(4);
 
 % Title and simulation time:
-title(sprintf('t = %2.2f%',time));
+title(sprintf('t = %2.2f% s',time));
 
 
 % Draw the rail that the cart-pole travels on
@@ -118,7 +118,7 @@ end
 
 
 % Format the axis so things look right:
-axis equal; axis(extents); axis off;      %  <-- Order is important here
+axis equal; axis(extents); axis on;      %  <-- Order is important here
 
 % Push the draw commands through the plot buffer
 drawnow;
