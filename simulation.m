@@ -113,4 +113,5 @@ function simulation(id, hObject, handles)
     legend('displacement','velocity','angle','angular velocity');
     xlabel('time (s)','Fontsize',14,'interpreter','latex');
     ylabel('States','Fontsize',14,'interpreter','latex');
+    xlim([min(t) max(t)]);
 end
